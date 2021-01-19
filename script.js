@@ -3,12 +3,25 @@ const quoteText = document.querySelector("#quote")
 const authorText = document.querySelector("#author")
 const twitterBtn = document.querySelector("#twitter")
 const newQuoteBtn = document.querySelector("#new-quote")
-
+const loader = document.querySelector("#loader")
 
 let apiQuotes = []
 
+//show loading
+function loading() {
+    loader.hidden = false
+    quoteContainer.hidden = true
+}
+
+//hide loading
+function complete() {
+    quoteContainer.hidden = false
+    loader.hidden = true
+}
+
 //show new quote
 function newQuote(){
+    loading()
     //pick a random quote from apiQuotes array
     const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)]
    //check if author field is blank and replace with 'unknown'
@@ -23,11 +36,14 @@ function newQuote(){
    } else {
     quoteText.classList.remove("long-quote")
    }
+   //set quote, hide loader
     quoteText.textContent = quote.text
+    complete()
 }
 
 //get quote from aPI
 async function getQuotes(){
+    loading()
     const apiUrl = 'https://type.fit/api/quotes'
     try {
         const response = await fetch(apiUrl)
@@ -50,5 +66,5 @@ function tweetQuote() {
 newQuoteBtn.addEventListener('click', newQuote)
 twitterBtn.addEventListener('click', tweetQuote)
 
-
+//on load
 getQuotes()
